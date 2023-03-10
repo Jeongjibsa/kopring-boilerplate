@@ -1,4 +1,4 @@
-package js.training.kopring.model.enum
+package js.training.kopring.model._enum
 
 enum class Authority {
     NORMAL, ADMIN

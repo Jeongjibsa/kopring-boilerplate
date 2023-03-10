@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import js.training.kopring.model.dto.LoginDto
+import js.training.kopring.model.dto.SignInDto
 import js.training.kopring.model.security.AccountAdapter
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -20,7 +20,7 @@ class JwtAuthenticationFilter(
 ) : UsernamePasswordAuthenticationFilter(authManager) {
 
     override fun attemptAuthentication(req: HttpServletRequest, response: HttpServletResponse): Authentication {
-        val credentials = ObjectMapper().readValue(req.inputStream, LoginDto::class.java)
+        val credentials = ObjectMapper().readValue(req.inputStream, SignInDto::class.java)
         val auth = UsernamePasswordAuthenticationToken(
             credentials.email,
             credentials.password,

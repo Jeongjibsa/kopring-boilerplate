@@ -1,18 +1,22 @@
 package js.training.kopring.model.entity
 
-import jakarta.persistence.Embeddable
-import jakarta.persistence.FetchType
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
 
-@Embeddable
-data class AccountRole(
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(nullable = false, name = "account_uuid")
-    val account: Account,
+@Entity
+@Table(name = "account_role")
+class AccountRole(
+    account: Account,
+    role: Role
+) : PrimaryKey() {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(nullable = false, name = "role_uuid")
-    val role: Role
-)
+    @JoinColumn(nullable = false, name = "account_id")
+    var account: Account = account
+        protected set
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(nullable = false, name = "role_id")
+    var role: Role = role
+        protected set
+}

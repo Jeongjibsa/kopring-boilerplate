@@ -1,7 +1,7 @@
 package js.training.kopring.model.entity
 
 import jakarta.persistence.*
-import js.training.kopring.model.enum.Authority
+import js.training.kopring.model._enum.Authority
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -11,8 +11,6 @@ import java.time.Instant
 @Table(name = "role")
 class Role(
     authority: Authority,
-    createdAt: Instant,
-    updatedAt: Instant,
 ) : PrimaryKey() {
 
     @Column(name = "authority")
@@ -22,16 +20,14 @@ class Role(
 
     @CreationTimestamp
     @Column(name = "created_at")
-    var createdAt: Instant = createdAt
+    var createdAt: Instant = Instant.now()
         protected set
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    var updatedAt: Instant = updatedAt
+    var updatedAt: Instant = Instant.now()
         protected set
 
-    @ElementCollection
-    @CollectionTable(name = "account_role")
-    protected val mutableAccounts: MutableSet<AccountRole> = mutableSetOf()
-    val accounts: Set<AccountRole> get() = mutableAccounts.toSet()
+    @OneToMany(mappedBy = "role", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    val accounts: MutableSet<AccountRole> = mutableSetOf()
 }

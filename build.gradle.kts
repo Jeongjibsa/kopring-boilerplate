@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
     kotlin("plugin.jpa") version "1.7.22"
+    kotlin("kapt") version "1.7.22"
 }
 
 allOpen {
@@ -41,6 +42,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core:9.15.2")
     implementation("org.flywaydb:flyway-mysql:9.15.2")
     implementation("com.github.f4b6a3:ulid-creator:5.1.0")
+    implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
+    kaptTest("org.mapstruct:mapstruct-processor:1.5.3.Final")
+
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")

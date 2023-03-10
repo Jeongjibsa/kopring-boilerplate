@@ -11,7 +11,7 @@ import kotlin.jvm.Transient
 @MappedSuperclass
 abstract class PrimaryKey : Persistable<UUID> {
     @Id
-    @Column(columnDefinition = "uuid")
+    @Column(columnDefinition = "uuid", name = "id")
     private val id: UUID = UlidCreator.getMonotonicUlid().toUuid()
 
     @Transient
