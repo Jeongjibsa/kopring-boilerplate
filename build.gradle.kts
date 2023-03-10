@@ -40,6 +40,7 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("org.flywaydb:flyway-core:9.15.2")
     implementation("org.flywaydb:flyway-mysql:9.15.2")
+    implementation("com.github.f4b6a3:ulid-creator:5.1.0")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")

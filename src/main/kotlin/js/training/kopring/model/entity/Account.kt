@@ -8,38 +8,47 @@ import java.time.Instant
 @Entity
 @Table(name = "account")
 class Account(
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    val id: Long,
+    email: String,
+    password: String,
+    name: String? = null,
+    phone: String,
+    createdAt: Instant,
+    updatedAt: Instant,
+    roles: Set<Role>
+) : PrimaryKey() {
 
     @Column(name = "email")
-    val email: String,
+    var email: String = email
+        protected set
 
     @Column(name = "password")
-    val password: String,
+    var password: String = password
+        protected set
 
     @Column(name = "name")
-    val name: String? = null,
+    var name: String? = name
+        protected set
 
     @Column(name = "phone")
-    val phone: String,
+    var phone: String = phone
+        protected set
 
     @CreationTimestamp
     @Column(name = "created_at")
-    val createdAt: Instant,
+    var createdAt: Instant = createdAt
+        protected set
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    val updatedAt: Instant,
+    var updatedAt: Instant = updatedAt
+        protected set
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinTable(
         name = "account_role",
         joinColumns = [JoinColumn(name = "account_id")],
         inverseJoinColumns = [JoinColumn(name = "role_id")]
     )
-    val roles: Set<Role> = emptySet()
-) {
+    protected val mutableRoles: MutableSet<Role> = roles.toMutableSet()
+    val roles: Set<Role> get() = mutableRoles.toSet()
 }

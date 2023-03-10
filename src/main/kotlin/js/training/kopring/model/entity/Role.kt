@@ -10,23 +10,28 @@ import java.time.Instant
 @Entity
 @Table(name = "role")
 class Role(
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    authority: Authority,
+    createdAt: Instant,
+    updatedAt: Instant,
+    users: Set<Account>
+) : PrimaryKey() {
 
     @Column(name = "authority")
     @Enumerated
-    val authority: Authority,
+    var authority: Authority = authority
+        protected set
 
     @CreationTimestamp
     @Column(name = "created_at")
-    var createdAt: Instant,
+    var createdAt: Instant = createdAt
+        protected set
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    var updatedAt: Instant,
+    var updatedAt: Instant = updatedAt
+        protected set
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    val users: Set<Account> = emptySet()
-)
+    var users: Set<Account> = users
+        protected set
+}
