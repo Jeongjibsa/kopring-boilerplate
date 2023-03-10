@@ -1,6 +1,7 @@
 package js.training.kopring.model.entity
 
 import jakarta.persistence.*
+import js.training.kopring.model.enum.Authority
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -14,14 +15,13 @@ class Account(
     phone: String,
     createdAt: Instant,
     updatedAt: Instant,
-    roles: Set<Role>
 ) : PrimaryKey() {
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = false)
     var email: String = email
         protected set
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     var password: String = password
         protected set
 
@@ -29,7 +29,7 @@ class Account(
     var name: String? = name
         protected set
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false)
     var phone: String = phone
         protected set
 
@@ -43,12 +43,10 @@ class Account(
     var updatedAt: Instant = updatedAt
         protected set
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
-    @JoinTable(
-        name = "account_role",
-        joinColumns = [JoinColumn(name = "account_id")],
-        inverseJoinColumns = [JoinColumn(name = "role_id")]
-    )
-    protected val mutableRoles: MutableSet<Role> = roles.toMutableSet()
-    val roles: Set<Role> get() = mutableRoles.toSet()
+    @ElementCollection
+    @CollectionTable(name = "account_role")
+    protected val mutableRoles: MutableSet<AccountRole> = mutableSetOf()
+    val roles: Set<AccountRole> get() = mutableRoles.toSet()
+
+    val authorities: Set<Authority> get() = this.roles.map { r -> r.role.authority }.toSet()
 }

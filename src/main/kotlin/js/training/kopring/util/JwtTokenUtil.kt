@@ -9,7 +9,7 @@ import java.util.*
 @Component
 class JwtTokenUtil {
 
-    @Value("\${app.jwt.secret_key}")
+    @Value("\${app.jwt.secret-key}")
     val secretKey: String = ""
 
     @Value("\${app.jwt.expiration}")

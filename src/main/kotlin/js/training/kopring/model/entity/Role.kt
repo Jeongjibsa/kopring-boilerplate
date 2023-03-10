@@ -13,7 +13,6 @@ class Role(
     authority: Authority,
     createdAt: Instant,
     updatedAt: Instant,
-    users: Set<Account>
 ) : PrimaryKey() {
 
     @Column(name = "authority")
@@ -31,7 +30,8 @@ class Role(
     var updatedAt: Instant = updatedAt
         protected set
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    var users: Set<Account> = users
-        protected set
+    @ElementCollection
+    @CollectionTable(name = "account_role")
+    protected val mutableAccounts: MutableSet<AccountRole> = mutableSetOf()
+    val accounts: Set<AccountRole> get() = mutableAccounts.toSet()
 }
