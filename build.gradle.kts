@@ -31,6 +31,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -38,11 +39,17 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.session:spring-session-data-redis")
-    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("org.flywaydb:flyway-core:9.15.2")
     implementation("org.flywaydb:flyway-mysql:9.15.2")
     implementation("com.github.f4b6a3:ulid-creator:5.1.0")
     implementation("org.mapstruct:mapstruct:1.5.3.Final")
+    implementation("org.jooq:jooq:3.18.0")
+    implementation("org.jooq:jooq-meta:3.18.0")
+    implementation("org.jooq:jooq-codegen:3.18.0")
+
     kapt("org.mapstruct:mapstruct-processor:1.5.3.Final")
     kaptTest("org.mapstruct:mapstruct-processor:1.5.3.Final")
 
