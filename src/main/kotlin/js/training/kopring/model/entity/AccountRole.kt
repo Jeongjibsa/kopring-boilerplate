@@ -6,17 +6,12 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "account_role")
 class AccountRole(
-    account: Account,
-    role: Role
-) : PrimaryKey() {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinColumn(nullable = false, name = "account_id")
-    var account: Account = account
-        protected set
+    val account: Account,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = [CascadeType.PERSIST, CascadeType.MERGE])
     @JoinColumn(nullable = false, name = "role_id")
-    var role: Role = role
-        protected set
-}
+    val role: Role,
+) : PrimaryKey()

@@ -1,8 +1,8 @@
 package js.training.kopring.model.entity
 
 import jakarta.persistence.*
-import js.training.kopring.model._enum.Authority
-import js.training.kopring.model.dto.SignUpDto
+import js.training.kopring.model.dto.payload.request.SignUpRequest
+import js.training.kopring.model.enums.Authority
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.time.Instant
@@ -10,44 +10,43 @@ import java.time.Instant
 @Entity
 @Table(name = "account")
 class Account(
-    email: String,
-    password: String,
-    name: String? = null,
-    phone: String,
-) : PrimaryKey() {
 
     @Column(name = "email", nullable = false)
-    var email: String = email
-        protected set
+    var email: String,
 
     @Column(name = "password", nullable = false)
-    var password: String = password
-        protected set
+    var password: String,
 
     @Column(name = "name")
-    var name: String? = name
-        protected set
+    var name: String?,
 
     @Column(name = "phone", nullable = false)
-    var phone: String = phone
-        protected set
+    var phone: String,
 
     @CreationTimestamp
     @Column(name = "created_at")
-    var createdAt: Instant = Instant.now()
-        protected set
+    val createdAt: Instant = Instant.now(),
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    var updatedAt: Instant = Instant.now()
-        protected set
+    val updatedAt: Instant = Instant.now(),
 
-    @OneToMany(mappedBy = "account", cascade = [CascadeType.PERSIST, CascadeType.MERGE])
+    @OneToMany(
+        mappedBy = "account",
+        cascade = [CascadeType.PERSIST, CascadeType.MERGE],
+        orphanRemoval = true
+    )
     val roles: MutableSet<AccountRole> = mutableSetOf()
+) : PrimaryKey() {
+
+    constructor(signUp: SignUpRequest) : this(
+        email = signUp.email,
+        password = signUp.password,
+        name = signUp.name,
+        phone = signUp.phone
+    )
 
     val authorities: Set<Authority> get() = this.roles.map { r -> r.role.authority }.toSet()
 
-    val roleString: String get() = this.authorities.map { author -> author.name }.joinToString { ", " }
-
-    constructor(signUp: SignUpDto) : this(signUp.email, signUp.password, signUp.name, signUp.phone)
+    fun getRoleString(): String = this.authorities.joinToString(", ")
 }

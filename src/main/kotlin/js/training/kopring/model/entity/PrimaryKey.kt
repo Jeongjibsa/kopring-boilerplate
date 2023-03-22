@@ -2,7 +2,9 @@ package js.training.kopring.model.entity
 
 import com.github.f4b6a3.ulid.UlidCreator
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.proxy.HibernateProxy
+import org.hibernate.type.SqlTypes
 import org.springframework.data.domain.Persistable
 import java.io.Serializable
 import java.util.*
@@ -10,8 +12,10 @@ import kotlin.jvm.Transient
 
 @MappedSuperclass
 abstract class PrimaryKey : Persistable<UUID> {
+
     @Id
     @Column(columnDefinition = "uuid", name = "id")
+    @JdbcTypeCode(SqlTypes.CHAR)
     private val id: UUID = UlidCreator.getMonotonicUlid().toUuid()
 
     @Transient
