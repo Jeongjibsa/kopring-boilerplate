@@ -3,11 +3,14 @@ package js.training.kopring.config.security
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import js.training.kopring.config.FilterConfig
+import js.training.kopring.config.handler.JwtAccessDeniedHandler
+import js.training.kopring.config.handler.JwtAuthenticationEntryPoint
 import js.training.kopring.service.AuthService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -18,6 +21,7 @@ import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 class SecurityConfig(
     private val authService: AuthService,
     private val jwtProvider: JwtProvider,
@@ -37,6 +41,10 @@ class SecurityConfig(
             .authorizeHttpRequests()
             .requestMatchers("/auth/**").permitAll()
             .anyRequest().authenticated()
+            .and()
+            .exceptionHandling()
+            .accessDeniedHandler(JwtAccessDeniedHandler(objectMapper()))
+            .authenticationEntryPoint(JwtAuthenticationEntryPoint(objectMapper()))
             .and()
             .apply(FilterConfig(jwtProvider, objectMapper()))
 
