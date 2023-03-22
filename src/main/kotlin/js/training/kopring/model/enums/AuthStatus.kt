@@ -13,6 +13,7 @@ enum class AuthStatus(
     DELETE_USER_SUCCESS(200, "Success to delete user", "회원탈퇴에 성공했습니다."),
     DUPLICATE_USER(400, "Duplicate user", "이미 존재하는 사용자입니다."),
     USER_NOT_FOUND(404, "User Not Found", "사용자를 찾을 수 없습니다."),
+    UNAUTHORIZED(401, "Unauthorized Request", "유효하지 않은 요청입니다."),
     JWT_EXPIRED(401, "Jwt Token Expired", "토큰이 만료되었습니다."),
     JWT_SIGNATURE(401, "Invalid Signature", "토큰 시그니쳐가 손상되어있습니다."),
     JWT_VALIDATE_FAIL(401, "Token Validate Failed", "토큰 검증에 실패했습니다."),

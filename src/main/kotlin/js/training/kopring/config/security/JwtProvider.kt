@@ -4,12 +4,10 @@ package js.training.kopring.config.security
 import io.jsonwebtoken.*
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.security.SignatureException
 import jakarta.servlet.http.HttpServletRequest
 import js.training.kopring.config.property.JwtProperty
-import js.training.kopring.exception.auth.JwtExpiredException
-import js.training.kopring.exception.auth.JwtSignatureException
-import js.training.kopring.exception.auth.JwtValidateException
-import js.training.kopring.exception.auth.UnexpectedTokenException
+import js.training.kopring.exception.auth.*
 import js.training.kopring.model.dto.payload.response.TokenResponse
 import js.training.kopring.service.AuthService
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -59,8 +57,8 @@ class JwtProvider(
         return TokenResponse(accessToken)
     }
 
-    fun getToken(httpServletRequest: HttpServletRequest): String? =
-        httpServletRequest.getHeader(JwtProperty.TOKEN_HEADER_NAME)
+    fun resolveToken(httpServletRequest: HttpServletRequest): String =
+        httpServletRequest.getHeader(JwtProperty.TOKEN_HEADER_NAME) ?: throw UnauthorizedException.EXCEPTION
 
     fun parseToken(token: String): String {
         if (token.startsWith(JwtProperty.TOKEN_PREFIX)) {
