@@ -57,8 +57,8 @@ class JwtProvider(
         return TokenResponse(accessToken)
     }
 
-    fun resolveToken(httpServletRequest: HttpServletRequest): String =
-        httpServletRequest.getHeader(JwtProperty.TOKEN_HEADER_NAME) ?: throw UnauthorizedException.EXCEPTION
+    fun resolveToken(httpServletRequest: HttpServletRequest): String? =
+        httpServletRequest.getHeader(JwtProperty.TOKEN_HEADER_NAME)
 
     fun parseToken(token: String): String {
         if (token.startsWith(JwtProperty.TOKEN_PREFIX)) {

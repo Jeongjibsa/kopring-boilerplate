@@ -2,8 +2,8 @@ package js.training.kopring.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import js.training.kopring.config.filter.ExceptionFilter
-import js.training.kopring.config.filter.LogFilter
 import js.training.kopring.config.filter.JwtFilter
+import js.training.kopring.config.filter.LogFilter
 import js.training.kopring.config.security.JwtProvider
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -16,7 +16,7 @@ class FilterConfig(
 ) : SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>() {
 
     override fun configure(builder: HttpSecurity) {
-        val tokenFilter = JwtFilter(jwtTokenProvider, objectMapper)
+        val tokenFilter = JwtFilter(jwtTokenProvider)
         val exceptionFilter = ExceptionFilter(objectMapper)
         val logFilter = LogFilter()
         builder.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter::class.java)
