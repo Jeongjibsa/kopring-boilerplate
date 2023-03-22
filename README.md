@@ -26,7 +26,7 @@
 
 #### 1-2. Spring Security
 
-> Spring Boot 3 버전 이후로부터 `WebSecurityConfigurerAdapter`가 deprecated 됨.
+> Spring Security 5.7 이후부터 `WebSecurityConfigurerAdapter`가 deprecated 됨.
 
 ```kotlin
     // AS-IS
