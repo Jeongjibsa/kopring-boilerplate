@@ -5,6 +5,7 @@
 ```
 * Kotlin 1.7.22
 * Java 17
+* MySQL 8
 * Spring Boot 3.0.4
 * Spring Data JPA
 * Spring Data Redis
