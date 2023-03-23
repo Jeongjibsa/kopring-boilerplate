@@ -26,7 +26,7 @@
 
 #### 1-2. Spring Security
 
-> Spring Security 5.7 이후부터 `WebSecurityConfigurerAdapter`가 deprecated 됨.
+##### 1) Spring Security 5.7 이후부터 `WebSecurityConfigurerAdapter`가 deprecated 됨.
 
 ```kotlin
     // AS-IS
@@ -44,6 +44,56 @@ class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         ...
+    }
+}
+```
+
+##### 2) UsernameNotFoundException Handling
+
+> `loadUserByUsername()`에서 `UsernameNotFoundException`을 throw했지만, `AuthenticationEntryPoint`가 handling하게됨.\
+> 이는 `authenticate()` 시 보안상?의 설계로 `DaoAuthenticationProvider`가 `UsernameNotFoundException`을
+> catch하여 `BadCredentialsException`을
+> throw하게됨.
+
+```java
+// AbstractUserDetailsAuthenticationProvider.java
+abstract class AbstractUserDetailsAuthenticationProvider {
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    ...
+        try {
+            user = retrieveUser(username, (UsernamePasswordAuthenticationToken) authentication);
+        } catch (UsernameNotFoundException ex) {
+            this.logger.debug("Failed to find user '" + username + "'");
+            if (!this.hideUserNotFoundExceptions) {
+                throw ex;
+            }
+            throw new BadCredentialsException(this.messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+        }
+    ...
+    }
+}
+```
+
+> Solution :
+> > 1. authenticate() 호출 전 service단에서 해당 유저 조회
+> > 2. DaoAuthenticationProvider.setHideUserNotFoundExceptions(false) 설정
+
+```kotlin
+// 2. DaoAuthenticationProvider.setHideUserNotFoundExceptions(false) 설정
+class SecurityConfig {
+
+    ...
+
+    @Bean("daoAuthenticationProvider")
+    @Qualifier
+    fun daoAuthenticationProvider(): DaoAuthenticationProvider {
+        val daoAuthenticationProvider = DaoAuthenticationProvider()
+        daoAuthenticationProvider.setUserDetailsService(authService)
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder())
+        daoAuthenticationProvider.isHideUserNotFoundExceptions = false
+        return daoAuthenticationProvider
     }
 }
 ```
