@@ -22,9 +22,9 @@ class AccountRepositoryTest(
     @Test
     fun test_find_account_by_email() {
         val email = "test@gmail.com"
-        val account: Account = accountRepository.findByEmail(email)
+        val account: Account? = accountRepository.findByEmail(email)
 
-        Assertions.assertEquals(null, accountMapper.toDto(account))
+        Assertions.assertEquals(null, account)
     }
 
     @Test
