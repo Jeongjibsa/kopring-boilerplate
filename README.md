@@ -51,9 +51,8 @@ class SecurityConfig {
 ##### 2) UsernameNotFoundException Handling
 
 > `loadUserByUsername()`에서 `UsernameNotFoundException`을 throw했지만, `AuthenticationEntryPoint`가 handling하게됨.\
-> 이는 `authenticate()` 시 보안상?의 설계로 `DaoAuthenticationProvider`가 `UsernameNotFoundException`을
-> catch하여 `BadCredentialsException`을
-> throw하게됨.
+> 이는 `authenticate()` 호출 시 보안성의 이슈로 설계상 \
+> `DaoAuthenticationProvider`가 `UsernameNotFoundException`을 catch하여 `BadCredentialsException`을 throw하게됨.
 
 ```java
 // AbstractUserDetailsAuthenticationProvider.java
