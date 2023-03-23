@@ -7,7 +7,7 @@ enum class AuthStatus(
     override val message: String,
     val describe: String,
 ) : BasePayload {
-    SIGN_UP_SUCCESS(200, "Success to SignUp", "로그인에 성공했습니다."),
+    SIGN_UP_SUCCESS(200, "Success to SignUp", "회원가입에 성공했습니다."),
     SIGN_IN_SUCCESS(200, "Success to SignIn", "로그인에 성공했습니다."),
     REISSUE_SUCCESS(200, "Success to reissue", "토큰 재발급에 성공했습니다."),
     DELETE_USER_SUCCESS(200, "Success to delete user", "회원탈퇴에 성공했습니다."),
