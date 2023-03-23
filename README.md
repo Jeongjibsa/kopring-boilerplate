@@ -21,9 +21,15 @@
 
 ### 1. Spring Boot 3 관련
 
-#### 1-1. Java Version
+#### 1-1. Upgrades [Release-Notes](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-3.0-Release-Notes)
 
-> `Java 17` 이상 필수
+> * `Java 17` 이상 필수
+>
+> * `Java EE` - > `Jakarta EE`
+>  > ex) pacakage `javax.*` -> `jakarta.*`
+>
+> * `GraalVM 지원`
+>
 
 #### 1-2. Spring Security
 
