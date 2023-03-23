@@ -1,11 +1,11 @@
 package js.training.kopring.service
 
 import js.training.kopring.config.security.JwtProvider
-import js.training.kopring.exception.auth.DuplicateUserException
 import js.training.kopring.exception.auth.JwtValidateException
 import js.training.kopring.model.dto.AccountDto
 import js.training.kopring.model.dto.payload.request.SignInRequest
 import js.training.kopring.model.dto.payload.request.SignUpRequest
+import js.training.kopring.model.dto.payload.request.TokenRequest
 import js.training.kopring.model.dto.payload.response.BaseResponse
 import js.training.kopring.model.dto.payload.response.TokenResponse
 import js.training.kopring.model.entity.Account
@@ -47,13 +47,22 @@ class AccountService(
         return accountMapper.toDto(account)
     }
 
+    @Transactional(readOnly = true)
     fun existsByEmail(email: String): Boolean {
         return accountRepository.existsByEmail(email)
     }
 
+    @Transactional
     fun signIn(request: SignInRequest): BaseResponse<*> {
         authenticationManager.authenticate(UsernamePasswordAuthenticationToken(request.email, request.password))
         val tokenResponse = jwtProvider.getToken(request.email)
+        if (tokenResponse.refreshToken == null) {
+            return BaseResponse.of(AuthStatus.UNEXPECTED_TOKEN)
+        }
+
+        val refreshToken =
+            RefreshToken(email = request.email, tokenResponse.refreshToken, jwtProvider.refreshTokenExpireTime)
+        refreshTokenRepository.save(refreshToken)
 
         return BaseResponse(AuthStatus.SIGN_IN_SUCCESS, tokenResponse)
     }
@@ -61,7 +70,7 @@ class AccountService(
     @Transactional
     fun signUp(request: SignUpRequest): BaseResponse<*> {
         if (this.existsByEmail(request.email)) {
-            return BaseResponse.of(DuplicateUserException.EXCEPTION)
+            return BaseResponse.of(AuthStatus.DUPLICATE_USER)
         }
         val authority = request.role;
         val password = request.password
@@ -72,14 +81,13 @@ class AccountService(
         account.roles.add(AccountRole(account, role))
         accountRepository.save(account)
 
-        val tokenResponse = jwtProvider.getToken(account.email)
-
-        return BaseResponse(AuthStatus.SIGN_UP_SUCCESS, tokenResponse)
+        return BaseResponse.of(AuthStatus.SIGN_UP_SUCCESS)
     }
 
-    fun reissue(refreshToken: String): BaseResponse<TokenResponse> {
-        val token: RefreshToken =
-            refreshTokenRepository.findByToken(refreshToken) ?: throw JwtValidateException.EXCEPTION
+    @Transactional
+    fun reissue(request: TokenRequest): BaseResponse<*> {
+        val token: RefreshToken = refreshTokenRepository.findByToken(request.refreshToken)
+            ?: return BaseResponse.of(AuthStatus.JWT_VALIDATE_FAIL)
         token.ttl = jwtProvider.refreshTokenExpireTime
         refreshTokenRepository.save(token)
 
