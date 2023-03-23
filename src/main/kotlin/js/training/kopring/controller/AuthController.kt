@@ -3,8 +3,8 @@ package js.training.kopring.controller
 import jakarta.validation.Valid
 import js.training.kopring.model.dto.payload.request.SignInRequest
 import js.training.kopring.model.dto.payload.request.SignUpRequest
+import js.training.kopring.model.dto.payload.request.TokenRequest
 import js.training.kopring.model.dto.payload.response.BaseResponse
-import js.training.kopring.model.dto.payload.response.TokenResponse
 import js.training.kopring.service.AccountService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -27,13 +27,8 @@ class AuthController(
         return accountService.signUp(request)
     }
 
-    @PutMapping("reissue")
-    fun refreshToken(@RequestHeader("Refresh-Token") refreshToken: String): BaseResponse<TokenResponse> {
+    @PostMapping("/reissue")
+    fun refreshToken(@RequestBody @Valid refreshToken: TokenRequest): BaseResponse<*> {
         return accountService.reissue(refreshToken)
-    }
-
-    @DeleteMapping("/delete/{email}")
-    fun delete(@PathVariable(name = "email") email: String): BaseResponse<*> {
-        return accountService.delete(email)
     }
 }
